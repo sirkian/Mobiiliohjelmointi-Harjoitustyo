@@ -1,20 +1,57 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar } from "expo-status-bar";
+import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import ProfileScreen from "./screens/ProfileScreen";
+import AddScreen from "./screens/AddScreen";
+import HomeScreen from "./screens/HomeScreen";
+import PlantScreen from "./screens/PlantScreen";
 
-export default function App() {
+const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
+
+function Root() {
+  const screenOptions = ({ route }) => ({
+    tabBarIcon: ({ focused, color, size }) => {
+      let iconName;
+
+      if (route.name === "Home") iconName = "md-leaf";
+      if (route.name === "Add")
+        (iconName = "md-add-circle-outline"), (size = 40);
+      if (route.name === "Profile") iconName = "md-person";
+
+      return <Ionicons name={iconName} size={size} color={color} />;
+    },
+    tabBarStyle: {
+      height: 50,
+    },
+    tabBarLabelStyle: {
+      color: "red",
+    },
+    tabBarActiveBackgroundColor: "grey",
+  });
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Tab.Navigator screenOptions={screenOptions}>
+      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Add" component={AddScreen} />
+      <Tab.Screen name="Profile" component={ProfileScreen} />
+    </Tab.Navigator>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Root"
+          component={Root}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen name="Plant" component={PlantScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}

@@ -9,10 +9,18 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@react-navigation/bottom-tabs": "^6.4.0",
+    "@react-navigation/native": "^6.0.13",
+    "@react-navigation/native-stack": "^6.9.1",
     "expo": "~46.0.16",
     "expo-status-bar": "~1.4.0",
     "react": "18.0.0",
-    "react-native": "0.69.6"
+    "react-native": "0.69.6",
+    "react-native-elements": "^3.4.2",
+    "react-native-progress": "^5.0.0",
+    "react-native-svg": "12.3.0",
+    "vector-icons": "^0.1.0",
+    "firebase": "9.6.11"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
