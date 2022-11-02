@@ -1,5 +1,7 @@
+const hourInMillis = 3600000;
+
 function intervalInMillis(interval) {
-  return interval * 24 * 3600000;
+  return interval * 24 * hourInMillis;
 }
 
 export function setTimer(interval) {
@@ -12,7 +14,7 @@ export function getTimeDiff(milliseconds) {
   return milliseconds - currentDate;
 }
 
-export function getTimePerc(timeLeft, waterInterval) {
+export function getProgress(timeLeft, waterInterval) {
   const percents = (timeLeft / intervalInMillis(waterInterval)) * 100;
-  return percents.toFixed(0);
+  return percents / 100;
 }

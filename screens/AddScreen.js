@@ -18,6 +18,7 @@ export default function AddScreen() {
         location,
         waterInterval,
         timeAfterInterval,
+        progress: 1,
       });
     }
     restoreState();

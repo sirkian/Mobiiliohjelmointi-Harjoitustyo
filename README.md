@@ -1,16 +1,15 @@
 Dependencies:
-<code>
-npm install @react-navigation/native
 
-npm install @react-navigation/bottom-tabs
+`npm install @react-navigation/native`
 
-npm install @react-navigation/native-stack
+`npm install @react-navigation/bottom-tabs`
 
-npm install react-native-elements
+`npm install @react-navigation/native-stack`
 
-expo install react-native-svg
+`npm install react-native-elements`
 
-npm install react-native-progress --save
+`expo install react-native-svg`
 
-expo install firebase@9.6.11
-</code>
+`npm install react-native-progress --save`
+
+`expo install firebase@9.6.11`

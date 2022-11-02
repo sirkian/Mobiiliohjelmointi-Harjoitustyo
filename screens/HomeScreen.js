@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { database } from "../firebase";
 import { ref, onValue } from "firebase/database";
 import { Tile, Text } from "react-native-elements";
+import * as Progress from "react-native-progress";
 
 export default function HomeScreen({ navigation }) {
   const [plants, setPlants] = useState([]);
@@ -37,12 +38,24 @@ export default function HomeScreen({ navigation }) {
                 key={plant.key}
                 imageSrc={require("../placeholder.jpg")}
                 title={plant.plantName}
+                caption={<Progress.Bar progress={0.3} width={200} />}
                 featured
-                containerStyle={{ marginBottom: 10, borderRadius: 5 }}
+                containerStyle={{ marginBottom: 10 }}
                 width={tileWidth}
                 height={tileHeight}
                 onPress={() => navigation.navigate("Plant", { plant })}
-              ></Tile>
+              >
+                <View
+                  style={{
+                    flex: 1,
+                    backgroundColor: "red",
+                    height: 200,
+                    width: 200,
+                  }}
+                >
+                  <Text>test</Text>
+                </View>
+              </Tile>
             ))
           ) : (
             <Text>Nothing in here yet.</Text>

@@ -1,21 +1,40 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
-import { getTimeDiff, getTimePerc } from "../utils";
+import React, { useEffect, useState } from "react";
+import { getTimeDiff, getProgress } from "../utils";
+import * as Progress from "react-native-progress";
+import { database } from "../firebase";
+import { ref, update } from "firebase/database";
 
 export default function PlantScreen({ route, navigation }) {
+  const [progress, setProgress] = useState(1);
   const { plant } = route.params;
   const timeLeft = getTimeDiff(plant.timeAfterInterval);
-  const percents = getTimePerc(timeLeft, plant.waterInterval);
 
-  console.log("Time left ms: ", timeLeft);
-  console.log("%: ", percents);
+  useEffect(() => {
+    setProgress(getProgress(timeLeft, plant.waterInterval));
+    handleUpdate();
+  }, []);
+
+  const handleUpdate = () => {
+    update(ref(database, "/plants/" + plant.key + "/"), { progress });
+    console.log(progress);
+  };
 
   return (
     <View>
       <Text>PlantScreen</Text>
       <Text>{plant.plantName}</Text>
       <Text>{plant.location}</Text>
-      <Text>{plant.waterIntervalInHrs}</Text>
+      <Progress.Circle
+        size={200}
+        progress={progress}
+        thickness={8}
+        strokeCap="round"
+        fill="transparent"
+        unfilledColor="lightgrey"
+        borderWidth={0}
+        showsText
+      />
     </View>
   );
 }
