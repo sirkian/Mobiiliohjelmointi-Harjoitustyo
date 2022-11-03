@@ -1,9 +1,9 @@
 import { StyleSheet, View } from "react-native";
 import React, { useState } from "react";
-import { database } from "../firebase";
+import { database } from "../utils/firebase";
 import { push, ref } from "firebase/database";
 import { Input, Button, Slider, Text } from "react-native-elements";
-import { setTimer } from "../utils";
+import { setTimer } from "../utils/utils";
 
 export default function AddScreen() {
   const [plantName, setPlantName] = useState("");
@@ -12,6 +12,7 @@ export default function AddScreen() {
 
   const handleSave = () => {
     const timeAfterInterval = setTimer(waterInterval);
+    // const timeAfterInterval = Date.now() + 60000;
     if (plantName.length > 0) {
       push(ref(database, "plants/"), {
         plantName,
@@ -27,7 +28,7 @@ export default function AddScreen() {
   const restoreState = () => {
     setPlantName("");
     setLocation("");
-    setWaterInterval(0);
+    setWaterInterval(1);
   };
 
   return (

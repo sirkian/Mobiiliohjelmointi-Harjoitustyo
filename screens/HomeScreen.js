@@ -1,10 +1,10 @@
 import { ScrollView, View, Dimensions } from "react-native";
-import React, { useEffect, useState } from "react";
-import { database } from "../firebase";
+import React, { useContext, useEffect, useState } from "react";
+import { database } from "../utils/firebase";
 import { ref, onValue, update } from "firebase/database";
 import { Tile, Text } from "react-native-elements";
 import * as Progress from "react-native-progress";
-import { getTimeDiff, getProgress } from "../utils";
+import { getTimeDiff, getProgress } from "../utils/utils";
 
 export default function HomeScreen({ navigation }) {
   const [plants, setPlants] = useState([]);

@@ -1,9 +1,9 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
-import { getProgress, getTimeDiff } from "../utils";
 import * as Progress from "react-native-progress";
-import { database } from "../firebase";
-import { ref, update } from "firebase/database";
+import { database } from "../utils/firebase";
+import { ref, remove } from "firebase/database";
+import { Button, Text } from "react-native-elements";
 
 export default function PlantScreen({ route, navigation }) {
   const [prog, setProg] = useState(0);
@@ -12,6 +12,25 @@ export default function PlantScreen({ route, navigation }) {
   useEffect(() => {
     setProg(plant.progress);
   }, []);
+
+  const showAlert = (plant) => {
+    Alert.alert(
+      "Delete plant?",
+      `Plant ${plant.plantName} will be deleted permanently.`,
+      [
+        {
+          text: "cancel",
+          style: "cancel",
+        },
+        { text: "delete", onPress: () => handleDelete(plant) },
+      ]
+    );
+  };
+
+  const handleDelete = (plant) => {
+    remove(ref(database, "/plants/" + plant.key));
+    navigation.navigate("Root");
+  };
 
   return (
     <View>
@@ -29,6 +48,7 @@ export default function PlantScreen({ route, navigation }) {
         borderWidth={0}
         showsText
       />
+      <Button title="Delete" onPress={() => showAlert(plant)} />
     </View>
   );
 }
