@@ -4,10 +4,12 @@ import * as Progress from "react-native-progress";
 import { database } from "../utils/firebase";
 import { ref, remove } from "firebase/database";
 import { Button, Text } from "react-native-elements";
+import { getAuth } from "firebase/auth";
 
 export default function PlantScreen({ route, navigation }) {
   const [prog, setProg] = useState(0);
   const { plant } = route.params;
+  const user = getAuth().currentUser;
 
   useEffect(() => {
     setProg(plant.progress);
@@ -28,7 +30,7 @@ export default function PlantScreen({ route, navigation }) {
   };
 
   const handleDelete = (plant) => {
-    remove(ref(database, "/plants/" + plant.key));
+    remove(ref(database, `plants/${user.uid}/${plant.key}`));
     navigation.navigate("Root");
   };
 

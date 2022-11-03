@@ -5,11 +5,13 @@ import { ref, onValue, update } from "firebase/database";
 import { Tile, Text } from "react-native-elements";
 import * as Progress from "react-native-progress";
 import { getTimeDiff, getProgress } from "../utils/utils";
+import { getAuth } from "firebase/auth";
 
 export default function HomeScreen({ navigation }) {
   const [plants, setPlants] = useState([]);
   const tileWidth = Dimensions.get("window").width * 0.8;
   const tileHeight = Dimensions.get("window").height * 0.2;
+  const user = getAuth().currentUser;
 
   useEffect(() => {
     fetchPlants();
@@ -17,12 +19,13 @@ export default function HomeScreen({ navigation }) {
 
   const fetchPlants = () => {
     handleUpdate();
-    const plantsRef = ref(database, "plants/");
+    const plantsRef = ref(database, `plants/${user.uid}/`);
     onValue(plantsRef, (snapshot) => {
       const data = snapshot.val();
       const plants = data
         ? Object.keys(data).map((key) => ({ key, ...data[key] }))
         : [];
+      console.log(plants);
       setPlants(plants);
     });
   };
@@ -32,8 +35,7 @@ export default function HomeScreen({ navigation }) {
       plants.forEach((plant) => {
         const timeDiff = getTimeDiff(plant.timeAfterInterval);
         const progress = getProgress(timeDiff, plant.waterInterval);
-        update(ref(database, "/plants/" + plant.key + "/"), { progress });
-        console.log("FOREACH PROGG", progress);
+        update(ref(database, `plants/${user.uid}/${plant.key}`), { progress });
       });
     }
   };

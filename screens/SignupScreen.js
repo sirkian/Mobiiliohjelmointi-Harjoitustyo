@@ -2,7 +2,6 @@ import { StyleSheet, View } from "react-native";
 import { Button, Input, Text } from "react-native-elements";
 import React, { useState } from "react";
 import firebase from "../utils/firebase";
-import { ErrorMsg } from "../utils/errorMsg";
 
 const auth = firebase.auth();
 
@@ -38,7 +37,6 @@ export default function SignupScreen({ navigation }) {
         onChangeText={(text) => setPassword(text)}
         value={password}
       />
-
       <Button onPress={handleSignup} title="Register" />
       <Text onPress={() => navigation.navigate("Welcome")}>
         Already an user? Sign in.

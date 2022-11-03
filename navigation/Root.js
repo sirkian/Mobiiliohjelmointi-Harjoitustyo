@@ -2,9 +2,9 @@ import React, { useContext, useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { Text } from "react-native-elements";
 import firebase from "../utils/firebase";
+import { AuthenticatedUserContext } from "./AuthenticatedUserProvider";
 import AuthStack from "./AuthStack";
 import HomeStack from "./HomeStack";
-import { AuthenticatedUserContext } from "./AuthenticatedUserProvider";
 
 const auth = firebase.auth();
 

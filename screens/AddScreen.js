@@ -4,17 +4,18 @@ import { database } from "../utils/firebase";
 import { push, ref } from "firebase/database";
 import { Input, Button, Slider, Text } from "react-native-elements";
 import { setTimer } from "../utils/utils";
+import { getAuth } from "firebase/auth";
 
 export default function AddScreen() {
   const [plantName, setPlantName] = useState("");
   const [location, setLocation] = useState("");
   const [waterInterval, setWaterInterval] = useState(1);
+  const user = getAuth().currentUser;
 
   const handleSave = () => {
     const timeAfterInterval = setTimer(waterInterval);
-    // const timeAfterInterval = Date.now() + 60000;
     if (plantName.length > 0) {
-      push(ref(database, "plants/"), {
+      push(ref(database, `plants/${user.uid}/`), {
         plantName,
         location,
         waterInterval,
