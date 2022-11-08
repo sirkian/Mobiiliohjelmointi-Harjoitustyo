@@ -13,3 +13,7 @@ Dependencies:
 `npm install react-native-progress --save`
 
 `expo install firebase@9.6.11`
+
+`npm install react-native-image-picker`
+
+`expo install react-native-screens react-native-safe-area-context`

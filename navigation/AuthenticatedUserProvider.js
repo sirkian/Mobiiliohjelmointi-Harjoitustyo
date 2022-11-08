@@ -2,7 +2,7 @@ import React, { useState, createContext } from "react";
 
 export const AuthenticatedUserContext = createContext({});
 
-export const AuthenticatedUserProvider = ({ children }) => {
+export default function AuthenticatedUserProvider({ children }) {
   const [user, setUser] = useState(null);
 
   return (
@@ -10,4 +10,4 @@ export const AuthenticatedUserProvider = ({ children }) => {
       {children}
     </AuthenticatedUserContext.Provider>
   );
-};
+}
