@@ -1,16 +1,23 @@
 import { StyleSheet, View } from "react-native";
-import React, { useState } from "react";
-import { database } from "../utils/firebase";
-import { push, ref } from "firebase/database";
+import React, { useEffect, useState } from "react";
 import { Input, Button, Slider, Text } from "react-native-elements";
 import { setTimer } from "../utils/utils";
+import { database } from "../utils/firebase";
+import { ref, push } from "firebase/database";
 import { getAuth } from "firebase/auth";
+import UploadComponent from "../utils/UploadComponent";
 
-export default function AddScreen() {
+export default function AddScreen({ navigation }) {
   const [plantName, setPlantName] = useState("");
   const [location, setLocation] = useState("");
   const [waterInterval, setWaterInterval] = useState(1);
+  const [saved, setSaved] = useState(false);
   const user = getAuth().currentUser;
+  let imageUrl;
+
+  const getImageUrl = (url) => {
+    imageUrl = url;
+  };
 
   const handleSave = () => {
     const timeAfterInterval = setTimer(waterInterval);
@@ -21,16 +28,21 @@ export default function AddScreen() {
         waterInterval,
         timeAfterInterval,
         progress: 1,
+        imageUrl,
       });
     }
-    restoreState();
+    setSaved(true);
   };
 
-  const restoreState = () => {
-    setPlantName("");
-    setLocation("");
-    setWaterInterval(1);
-  };
+  useEffect(() => {
+    if (saved) {
+      setPlantName("");
+      setLocation("");
+      setWaterInterval(1);
+      imageUrl = "";
+      setSaved(false);
+    }
+  }, [saved]);
 
   return (
     <View>
@@ -60,6 +72,7 @@ export default function AddScreen() {
           thumbStyle={{ height: 20, width: 20, backgroundColor: "grey" }}
         />
       </View>
+      <UploadComponent func={getImageUrl} saved={saved} />
       <Button title="Save" onPress={handleSave} />
     </View>
   );

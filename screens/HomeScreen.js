@@ -25,7 +25,7 @@ export default function HomeScreen({ navigation }) {
       const plants = data
         ? Object.keys(data).map((key) => ({ key, ...data[key] }))
         : [];
-      console.log(plants);
+      // console.log(plants);
       setPlants(plants);
     });
   };
