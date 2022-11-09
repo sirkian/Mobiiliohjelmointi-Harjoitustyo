@@ -54,7 +54,9 @@ export default function HomeScreen({ navigation }) {
             plants.map((plant) => (
               <Tile
                 key={plant.key}
-                imageSrc={require("../placeholder.jpg")}
+                imageSrc={
+                  { uri: plant.imageUrl } || require("../placeholder.jpg")
+                }
                 title={plant.plantName}
                 caption={
                   <Progress.Bar
@@ -67,6 +69,11 @@ export default function HomeScreen({ navigation }) {
                 }
                 featured
                 containerStyle={{ marginBottom: 10 }}
+                imageProps={{
+                  resizeMode: "cover",
+                  transition: "true",
+                  borderRadius: 5,
+                }}
                 width={tileWidth}
                 height={tileHeight}
                 onPress={() => navigation.navigate("Plant", { plant })}

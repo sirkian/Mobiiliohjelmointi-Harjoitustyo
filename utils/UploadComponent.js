@@ -20,7 +20,6 @@ export default function UploadComponent(props) {
       aspect: [4, 3],
       quality: 1,
     });
-    console.log(result);
     if (!result.cancelled) {
       setImage(result);
     }
@@ -75,13 +74,7 @@ export default function UploadComponent(props) {
     <View style={styles.container}>
       {isUploaded ? (
         <View>
-          <Image
-            style={{
-              height: 300,
-              width: 400,
-            }}
-            source={{ uri: image }}
-          />
+          <Image style={styles.image} source={{ uri: image }} />
           <Icon
             reverse
             type="feather"
@@ -94,18 +87,29 @@ export default function UploadComponent(props) {
       ) : (
         <View>
           {image !== null ? (
-            <Image
-              style={{ width: 100, height: 100 }}
-              source={{ uri: image.uri }}
-            />
+            <Image style={styles.image} source={{ uri: image.uri }} />
           ) : (
             <Button onPress={pickImage} title="PICK IMAGE" />
           )}
           {!uploading && image !== null && (
-            <>
-              <Button title="UPLOAD" onPress={handleUpload} />
-              <Button title="CANCEL" onPress={() => setImage(null)} />
-            </>
+            <View style={styles.iconView}>
+              <Icon
+                reverse
+                color="green"
+                type="feather"
+                name="check"
+                onPress={handleUpload}
+                containerStyle={styles.iconContainer}
+              />
+              <Icon
+                reverse
+                color="red"
+                type="feather"
+                name="x"
+                onPress={() => setImage(null)}
+                containerStyle={styles.iconContainer}
+              />
+            </View>
           )}
         </View>
       )}
@@ -119,12 +123,29 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    height: 300,
-    backgroundColor: "grey",
+    height: 200,
+    width: 340,
+    borderRadius: 5,
+    backgroundColor: "rgba(255, 255, 255, 0.15)",
+  },
+  image: {
+    height: 200,
+    width: 340,
+    borderRadius: 5,
+  },
+  iconView: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    marginBottom: -66,
+  },
+  iconContainer: {
+    positition: "absolute",
+    bottom: 80,
   },
   icon: {
     position: "absolute",
-    bottom: 150 - iconSize,
-    left: 200 - iconSize,
+    bottom: 100 - iconSize,
+    left: 160 - iconSize,
   },
 });
