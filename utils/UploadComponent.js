@@ -89,7 +89,12 @@ export default function UploadComponent(props) {
           {image !== null ? (
             <Image style={styles.image} source={{ uri: image.uri }} />
           ) : (
-            <Button onPress={pickImage} title="PICK IMAGE" />
+            <Button
+              onPress={pickImage}
+              title="PICK IMAGE"
+              buttonStyle={styles.button}
+              titleStyle={styles.buttonTitle}
+            />
           )}
           {!uploading && image !== null && (
             <View style={styles.iconView}>
@@ -118,6 +123,8 @@ export default function UploadComponent(props) {
 }
 
 const iconSize = 28;
+const semiTransparent = "rgba(255, 255, 255, 0.65)";
+const darkGreen = "#0b2613";
 const styles = StyleSheet.create({
   container: {
     display: "flex",
@@ -147,5 +154,16 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 100 - iconSize,
     left: 160 - iconSize,
+  },
+  button: {
+    paddingHorizontal: 25,
+    paddingVertical: 10,
+    backgroundColor: semiTransparent,
+    marginTop: 10,
+  },
+  buttonTitle: {
+    color: darkGreen,
+    marginLeft: 5,
+    fontSize: 16,
   },
 });

@@ -11,23 +11,30 @@ const Stack = createNativeStackNavigator();
 
 function Root() {
   const screenOptions = ({ route }) => ({
+    tabBarHideOnKeyboard: true,
+    headerShown: false,
     tabBarIcon: ({ focused, color, size }) => {
       let iconName;
-
       if (route.name === "Home") iconName = "md-leaf";
-      if (route.name === "Add")
-        (iconName = "md-add-circle-outline"), (size = 40);
+      if (route.name === "Add") iconName = "md-add-circle-outline";
       if (route.name === "Profile") iconName = "md-person";
-
       return <Ionicons name={iconName} size={size} color={color} />;
     },
     tabBarStyle: {
+      height: 60,
+      position: "absolute",
+      backgroundColor: "rgba(255, 255, 255, 0.6)",
+    },
+    tabBarActiveBackgroundColor: "#0b2613",
+    tabBarActiveTintColor: "white",
+    tabBarInactiveTintColor: "#0b2613",
+    tabBarLabelStyle: { marginBottom: 3 },
+    tabBarItemStyle: {
       height: 50,
+      borderRadius: 5,
+      marginVertical: 5,
+      marginHorizontal: 2,
     },
-    tabBarLabelStyle: {
-      color: "red",
-    },
-    tabBarActiveBackgroundColor: "grey",
   });
 
   return (
@@ -40,6 +47,17 @@ function Root() {
 }
 
 export default function HomeStack() {
+  const options = ({ route }) => ({
+    title: route.params.plant.plantName,
+    headerStyle: {
+      backgroundColor: "#0b2613",
+    },
+    headerTintColor: "white",
+    headerTitleStyle: {
+      textAlign: "center",
+    },
+  });
+
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -47,7 +65,7 @@ export default function HomeStack() {
         component={Root}
         options={{ headerShown: false }}
       />
-      <Stack.Screen name="Plant" component={PlantScreen} />
+      <Stack.Screen name="Plant" component={PlantScreen} options={options} />
     </Stack.Navigator>
   );
 }

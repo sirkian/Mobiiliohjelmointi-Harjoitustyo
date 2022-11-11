@@ -1,10 +1,11 @@
 import {
   Alert,
-  KeyboardAvoidingView,
   StyleSheet,
   TouchableWithoutFeedback,
   View,
   Keyboard,
+  ImageBackground,
+  Dimensions,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Input, Button, Slider, Text, Icon } from "react-native-elements";
@@ -38,7 +39,7 @@ export default function AddScreen({ navigation }) {
         imageUrl,
       });
       setSaved(true);
-      Alert.alert(null, `${plantName} added!.`, [
+      Alert.alert(null, `${plantName} added!`, [
         { text: "ok", onPress: () => navigation.navigate("Home") },
       ]);
     }
@@ -55,86 +56,162 @@ export default function AddScreen({ navigation }) {
   }, [saved]);
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={styles.container}
-    >
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View>
-          <Text style={styles.header}>Add a new plant!</Text>
-          <View style={styles.inputContainer}>
-            <Input
-              placeholder="Name"
-              onChangeText={(text) => setPlantName(text)}
-              value={plantName}
-            />
-            <Input
-              placeholder="Location / room"
-              onChangeText={(text) => setLocation(text)}
-              value={location}
-            />
-            <View style={{ width: "70%", left: 50 }}>
-              {waterInterval > 1 ? (
-                <Text>Water every {waterInterval} days</Text>
-              ) : (
-                <Text>Water every day</Text>
-              )}
-              <Slider
-                value={waterInterval}
-                onValueChange={(value) => setWaterInterval(value)}
-                minimumValue={1}
-                maximumValue={14}
-                step={1}
-                trackStyle={{ height: 4 }}
-                thumbStyle={{ height: 20, width: 20, backgroundColor: "grey" }}
+    <View style={styles.container}>
+      <ImageBackground
+        source={require("../assets/pexels-adrian-mohammad-1224158.jpg")}
+        resizeMode="cover"
+        style={styles.imageBg}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={styles.innerContainer}>
+            <View style={styles.inputContainer}>
+              <Text style={styles.heading}>Add a new plant!</Text>
+              <Input
+                style={styles.input}
+                placeholder="Name"
+                onChangeText={(text) => setPlantName(text)}
+                value={plantName}
+              />
+              <Input
+                style={styles.input}
+                placeholder="Location / room"
+                onChangeText={(text) => setLocation(text)}
+                value={location}
+              />
+              <View style={{ width: "70%", left: 50 }}>
+                {waterInterval > 1 ? (
+                  <Text style={styles.text}>
+                    Water every {waterInterval} days
+                  </Text>
+                ) : (
+                  <Text style={styles.text}>Water every day</Text>
+                )}
+                <Slider
+                  value={waterInterval}
+                  onValueChange={(value) => setWaterInterval(value)}
+                  minimumValue={1}
+                  maximumValue={14}
+                  step={1}
+                  trackStyle={{ height: 5 }}
+                  thumbStyle={{
+                    height: 20,
+                    width: 20,
+                    backgroundColor: "transparent",
+                  }}
+                  thumbProps={{
+                    children: (
+                      <Icon
+                        name="droplet"
+                        type="feather"
+                        size={15}
+                        reverse
+                        containerStyle={{ right: 15, bottom: 15 }}
+                        color="#278c8c"
+                      />
+                    ),
+                  }}
+                />
+              </View>
+            </View>
+            <UploadComponent func={getImageUrl} saved={saved} />
+            <View style={styles.saveContainer}>
+              <Button
+                title="Save"
+                buttonStyle={styles.button}
+                titleStyle={styles.buttonTitle}
+                onPress={handleSave}
+                icon={
+                  <Icon
+                    type="feather"
+                    name="save"
+                    size={16}
+                    color={darkGreen}
+                  />
+                }
+              />
+              <Button
+                title="Clear"
+                buttonStyle={styles.button}
+                titleStyle={styles.buttonTitle}
+                onPress={() => setSaved(true)}
+                icon={
+                  <Icon type="feather" name="x" size={16} color={darkGreen} />
+                }
               />
             </View>
           </View>
-          <UploadComponent func={getImageUrl} saved={saved} />
-          <View style={styles.saveContainer}>
-            <Icon type="feather" name="save" reverse onPress={handleSave} />
-            <Text style={styles.text} onPress={() => setSaved(true)}>
-              Clear
-            </Text>
-          </View>
-        </View>
-      </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
+        </TouchableWithoutFeedback>
+      </ImageBackground>
+    </View>
   );
 }
 
-const semiTransparent = "rgba(255, 255, 255, 0.15)";
+const semiTransparent = "rgba(255, 255, 255, 0.8)";
+const darkGreen = "#0b2613";
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: "#141414",
+    display: "flex",
+  },
+  imageBg: {
+    width: Dimensions.get("window").width,
+    height: Dimensions.get("window").height + 20,
+    marginTop: 45,
+  },
+  innerContainer: {
     display: "flex",
     flex: 1,
-    backgroundColor: "#0b2613",
-    justifyContent: "space-around",
     alignItems: "center",
+    paddingBottom: 60,
   },
-  header: {
+  heading: {
     fontSize: 28,
-    color: "white",
+    color: darkGreen,
     textAlign: "center",
-    marginVertical: 15,
+    marginTop: 15,
+    marginBottom: 25,
+    fontFamily: "serif",
+    fontWeight: "bold",
+    letterSpacing: 0.5,
   },
   inputContainer: {
     backgroundColor: semiTransparent,
     width: 340,
     borderRadius: 5,
-    height: "35%",
+    marginTop: 50,
     marginBottom: 10,
+    paddingHorizontal: 35,
+    paddingTop: 10,
+    paddingBottom: 20,
+    position: "relative",
   },
-  saveContainer: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-
-    height: 100,
-    marginTop: 8,
+  input: {
+    marginBottom: 5,
   },
   text: {
-    color: "red",
+    textAlign: "center",
+    fontSize: 16,
+    marginBottom: 5,
+  },
+  saveContainer: {
+    width: 340,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-around",
+    flexDirection: "row-reverse",
+    marginTop: 8,
+  },
+  button: {
+    paddingHorizontal: 25,
+    paddingVertical: 10,
+    backgroundColor: semiTransparent,
+    marginTop: 20,
+  },
+  buttonTitle: {
+    fontFamily: "serif",
+    fontWeight: "bold",
+    color: darkGreen,
+    marginLeft: 10,
     fontSize: 16,
   },
 });

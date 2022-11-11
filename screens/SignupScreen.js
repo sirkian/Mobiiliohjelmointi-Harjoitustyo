@@ -37,7 +37,7 @@ export default function SignupScreen({ navigation }) {
       <View>
         <Image
           style={styles.loginImage}
-          source={require("../placeholder.jpg")}
+          source={require("../assets/pexels-ylanite-koppens-1445416(1).jpg")}
         />
       </View>
       <View style={styles.loginContainer}>
