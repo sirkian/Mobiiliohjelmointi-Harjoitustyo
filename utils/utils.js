@@ -1,20 +1,34 @@
 const hourInMillis = 3600000;
 
-function intervalInMillis(interval) {
+const intervalInMillis = (interval) => {
   return interval * 24 * hourInMillis;
-}
+};
 
-export function setTimer(interval) {
-  const currentDate = Date.now();
-  return currentDate + intervalInMillis(interval);
-}
+export const setTimer = (interval) => {
+  return Date.now() + intervalInMillis(interval);
+};
 
-export function getTimeDiff(milliseconds) {
-  const currentDate = Date.now();
-  return milliseconds - currentDate;
-}
+export const getTimeDiff = (milliseconds) => {
+  return milliseconds - Date.now();
+};
 
-export function getProgress(timeLeft, waterInterval) {
+export const getProgress = (timeLeft, waterInterval) => {
   const percents = (timeLeft / intervalInMillis(waterInterval)) * 100;
   return percents / 100;
-}
+};
+
+export const formatTime = (timeAfterInterval) => {
+  if (Date.now() > timeAfterInterval) return "Time up.";
+
+  let seconds = (timeAfterInterval - Date.now()) / 1000;
+  let days = Math.floor(seconds / (24 * 60 * 60));
+  seconds -= days * (24 * 60 * 60);
+  let hours = Math.floor(seconds / (60 * 60));
+  seconds -= hours * (60 * 60);
+  let minutes = Math.floor(seconds / 60);
+  seconds -= minutes * 60;
+
+  return (
+    (days > 0 ? days + " days, " : "") + hours + "hrs, " + minutes + "mins"
+  );
+};

@@ -5,10 +5,10 @@ import {
   StyleSheet,
   ImageBackground,
 } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { database } from "../utils/firebase";
 import { ref, onValue, update } from "firebase/database";
-import { Tile, Text, Header } from "react-native-elements";
+import { Tile, Text } from "react-native-elements";
 import * as Progress from "react-native-progress";
 import { getTimeDiff, getProgress } from "../utils/utils";
 import { getAuth } from "firebase/auth";
@@ -25,26 +25,31 @@ export default function HomeScreen({ navigation }) {
   }, []);
 
   const fetchPlants = () => {
-    handleUpdate();
     const plantsRef = ref(database, `plants/${user.uid}/`);
     onValue(plantsRef, (snapshot) => {
       const data = snapshot.val();
       const plants = data
         ? Object.keys(data).map((key) => ({ key, ...data[key] }))
         : [];
-      // console.log(plants);
       setPlants(plants);
     });
+    handleUpdate();
   };
 
   const handleUpdate = () => {
     if (plants.length > 0) {
       plants.forEach((plant) => {
         const timeDiff = getTimeDiff(plant.timeAfterInterval);
-        const progress = getProgress(timeDiff, plant.waterInterval);
+        let progress = getProgress(timeDiff, plant.waterInterval);
+        if (progress < 0.1) progress = 0;
         update(ref(database, `plants/${user.uid}/${plant.key}`), { progress });
       });
     }
+  };
+
+  const navigate = (plant) => {
+    handleUpdate();
+    navigation.navigate("Plant", { plant });
   };
 
   return (
@@ -81,7 +86,7 @@ export default function HomeScreen({ navigation }) {
                   }}
                   width={tileWidth}
                   height={tileHeight}
-                  onPress={() => navigation.navigate("Plant", { plant })}
+                  onPress={() => navigate(plant)}
                 >
                   <View
                     style={{

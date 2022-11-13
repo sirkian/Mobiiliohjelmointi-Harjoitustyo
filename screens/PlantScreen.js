@@ -1,46 +1,48 @@
-import {
-  StyleSheet,
-  View,
-  Alert,
-  Dimensions,
-  TouchableOpacity,
-} from "react-native";
+import { StyleSheet, View, Alert, Dimensions } from "react-native";
 import React, { useEffect, useState } from "react";
 import * as Progress from "react-native-progress";
 import { database } from "../utils/firebase";
-import { ref, remove, update } from "firebase/database";
+import { ref, remove, update, onValue } from "firebase/database";
 import { Button, Text, Image, Icon, Input } from "react-native-elements";
 import { getAuth } from "firebase/auth";
-import { setTimer } from "../utils/utils";
+import { setTimer, formatTime } from "../utils/utils";
 
 export default function PlantScreen({ route, navigation }) {
   const [prog, setProg] = useState(0);
   const [plantName, setPlantName] = useState("");
-  const [isNameEdited, setIsNameEdited] = useState(false);
+  const [editingName, setEditingName] = useState(false);
   const { plant } = route.params;
   const user = getAuth().currentUser;
 
   useEffect(() => {
-    updateProgress();
+    fetchPlant();
   }, []);
 
-  const updateProgress = () => {
-    setProg(plant.progress);
+  const updateProgress = (progress) => {
+    setProg(progress);
+  };
+
+  const fetchPlant = () => {
+    const plantRef = ref(database, `plants/${user.uid}/${plant.key}`);
+    onValue(plantRef, (snapshot) => {
+      const data = snapshot.val();
+      plant.progress = data.progress;
+      plant.timeAfterInterval = data.timeAfterInterval;
+    });
+    updateProgress(plant.progress);
   };
 
   const handleEditName = () => {
     setPlantName(plant.plantName);
-    setIsNameEdited(true);
+    setEditingName(true);
   };
 
   const updateName = () => {
     update(ref(database, `plants/${user.uid}/${plant.key}`), {
       plantName,
-    }).then(() => {
-      Alert.alert("Sukses");
     });
-    setPlantName(plant.plantName);
-    setIsNameEdited(false);
+    plant.plantName = plantName;
+    setEditingName(false);
   };
 
   const handleReset = async (plant) => {
@@ -49,7 +51,7 @@ export default function PlantScreen({ route, navigation }) {
       timeAfterInterval,
       progress: 1,
     });
-    updateProgress();
+    updateProgress(plant.progress);
   };
 
   const handleDelete = (plant) => {
@@ -75,7 +77,7 @@ export default function PlantScreen({ route, navigation }) {
     <View style={styles.container}>
       <Image source={{ uri: plant.imageUrl }} style={styles.image} />
       <View style={styles.plantNameContainer}>
-        {isNameEdited ? (
+        {editingName ? (
           <Input
             style={styles.plantNameInput}
             containerStyle={{ width: 300 }}
@@ -108,33 +110,48 @@ export default function PlantScreen({ route, navigation }) {
       <View style={styles.contentContainer}>
         <View style={styles.textContainer}>
           <Text style={styles.text}>
-            <Icon type="feather" name="map-pin" size={14} color="black" />{" "}
+            <Icon
+              iconStyle={{}}
+              type="feather"
+              name="map-pin"
+              size={14}
+              color="black"
+            />{" "}
             {plant.location}
           </Text>
           <Text style={styles.text}>
             <Icon type="feather" name="droplet" size={14} color="black" />{" "}
             {plant.waterInterval === 1 ? (
-              <Text>Water every day</Text>
+              <Text style={styles.text}>Water every day</Text>
             ) : (
-              <Text>Water every {plant.waterInterval} days</Text>
+              <Text style={styles.text}>
+                Water every {plant.waterInterval} days
+              </Text>
             )}
           </Text>
+          <Text style={styles.text}>
+            <Icon type="feather" name="clock" size={14} color="black" />{" "}
+            {formatTime(plant.timeAfterInterval)}
+          </Text>
         </View>
-        <Progress.Circle
-          size={200}
-          progress={prog}
-          thickness={8}
-          strokeCap="round"
-          fill="transparent"
-          color="#278c8c"
-          unfilledColor="lightgrey"
-          borderWidth={0}
-          showsText
-        />
+        <View style={styles.progressContainer}>
+          <Progress.Circle
+            size={Dimensions.get("window").width * 0.45}
+            progress={prog}
+            thickness={8}
+            strokeCap="round"
+            fill="transparent"
+            color="#278c8c"
+            unfilledColor="lightgrey"
+            borderWidth={0}
+            showsText
+          />
+          <Text onPress={() => handleReset(plant)} style={styles.reset}>
+            Reset
+          </Text>
+        </View>
       </View>
-      <TouchableOpacity onPress={() => handleReset(plant)}>
-        <Text style={styles.reset}>Reset</Text>
-      </TouchableOpacity>
+
       <Button title="Delete" onPress={() => showAlert(plant)} />
     </View>
   );
@@ -179,13 +196,26 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     justifyContent: "space-between",
   },
-  textContainer: {},
-  text: {},
+  textContainer: {
+    backgroundColor: "red",
+    display: "flex",
+    flex: 1,
+    paddingTop: 10,
+  },
+  progressContainer: {
+    backgroundColor: "blue",
+    display: "flex",
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  text: {
+    marginBottom: 5,
+    backgroundColor: "grey",
+  },
   reset: {
-    position: "absolute",
-    bottom: 110,
-    left: 45,
-    padding: 20,
+    position: "relative",
+    bottom: 60,
     color: "#278c8c",
   },
 });
