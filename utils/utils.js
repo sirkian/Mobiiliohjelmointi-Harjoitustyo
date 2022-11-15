@@ -1,3 +1,6 @@
+import { ref, getStorage, deleteObject } from "firebase/storage";
+
+const storage = getStorage();
 const hourInMillis = 3600000;
 
 const intervalInMillis = (interval) => {
@@ -31,4 +34,19 @@ export const formatTime = (timeAfterInterval) => {
   return (
     (days > 0 ? days + " days, " : "") + hours + "hrs, " + minutes + "mins"
   );
+};
+
+export const deleteImageFromStorage = (imageUrl) => {
+  const start = imageUrl.lastIndexOf("/");
+  const end = imageUrl.lastIndexOf("?");
+  const imageName = imageUrl.slice(start + 1, end);
+  const imageRef = ref(storage, imageName);
+
+  deleteObject(imageRef)
+    .then(() => {
+      console.log("Image deleted!");
+    })
+    .catch((error) => {
+      console.log("Image delete failed ", error);
+    });
 };

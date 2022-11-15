@@ -5,7 +5,7 @@ import { database } from "../utils/firebase";
 import { ref, remove, update, onValue } from "firebase/database";
 import { Button, Text, Image, Icon, Input } from "react-native-elements";
 import { getAuth } from "firebase/auth";
-import { setTimer, formatTime } from "../utils/utils";
+import { setTimer, formatTime, deleteImageFromStorage } from "../utils/utils";
 
 export default function PlantScreen({ route, navigation }) {
   const [prog, setProg] = useState(0);
@@ -58,6 +58,7 @@ export default function PlantScreen({ route, navigation }) {
   };
 
   const handleDelete = (plant) => {
+    deleteImageFromStorage(plant.imageUrl);
     remove(ref(database, `plants/${user.uid}/${plant.key}`));
     navigation.navigate("Root");
   };
