@@ -13,24 +13,12 @@ export default function PlantScreen({ route, navigation }) {
   const [editingName, setEditingName] = useState(false);
   const { plant } = route.params;
   const user = getAuth().currentUser;
+  const [timeLeft, setTimeLeft] = useState("");
 
   useEffect(() => {
-    fetchPlant();
+    setProg(plant.progress);
+    setTimeLeft(formatTime(plant.timeAfterInterval));
   }, []);
-
-  const updateProgress = (progress) => {
-    setProg(progress);
-  };
-
-  const fetchPlant = () => {
-    const plantRef = ref(database, `plants/${user.uid}/${plant.key}`);
-    onValue(plantRef, (snapshot) => {
-      const data = snapshot.val();
-      plant.progress = data.progress;
-      plant.timeAfterInterval = data.timeAfterInterval;
-    });
-    updateProgress(plant.progress);
-  };
 
   const handleEditName = () => {
     setPlantName(plant.plantName);
@@ -45,18 +33,14 @@ export default function PlantScreen({ route, navigation }) {
     setEditingName(false);
   };
 
-  const handleReset = async (plant) => {
+  const handleReset = (plant) => {
     const timeAfterInterval = setTimer(plant.waterInterval);
-    await update(ref(database, `plants/${user.uid}/${plant.key}`), {
+    update(ref(database, `plants/${user.uid}/${plant.key}`), {
       timeAfterInterval,
       progress: 1,
     });
-    updateProgress(plant.progress);
-  };
-
-  const handleDelete = (plant) => {
-    remove(ref(database, `plants/${user.uid}/${plant.key}`));
-    navigation.navigate("Root");
+    setTimeLeft(formatTime(timeAfterInterval));
+    setProg(1);
   };
 
   const showAlert = (plant) => {
@@ -71,6 +55,11 @@ export default function PlantScreen({ route, navigation }) {
         { text: "delete", onPress: () => handleDelete(plant) },
       ]
     );
+  };
+
+  const handleDelete = (plant) => {
+    remove(ref(database, `plants/${user.uid}/${plant.key}`));
+    navigation.navigate("Root");
   };
 
   return (
@@ -131,7 +120,7 @@ export default function PlantScreen({ route, navigation }) {
           </Text>
           <Text style={styles.text}>
             <Icon type="feather" name="clock" size={14} color="black" />{" "}
-            {formatTime(plant.timeAfterInterval)}
+            {timeLeft}
           </Text>
         </View>
         <View style={styles.progressContainer}>
@@ -197,13 +186,11 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   textContainer: {
-    backgroundColor: "red",
     display: "flex",
     flex: 1,
     paddingTop: 10,
   },
   progressContainer: {
-    backgroundColor: "blue",
     display: "flex",
     flex: 1,
     alignItems: "center",
@@ -211,7 +198,6 @@ const styles = StyleSheet.create({
   },
   text: {
     marginBottom: 5,
-    backgroundColor: "grey",
   },
   reset: {
     position: "relative",
