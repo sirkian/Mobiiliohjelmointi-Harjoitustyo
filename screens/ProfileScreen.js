@@ -1,4 +1,4 @@
-import { Alert, StyleSheet, View } from "react-native";
+import { Alert, StyleSheet, View, ImageBackground } from "react-native";
 import React from "react";
 import { getAuth, signOut } from "firebase/auth";
 import { Button, Text } from "react-native-elements";
@@ -9,12 +9,20 @@ export default function ProfileScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.innerContainer}>
-        <Text>ProfileScreen</Text>
-        <Text>{user.email}</Text>
-        <Text>{user.uid}</Text>
-        <Button title="Log out" onPress={() => signOut(auth)} />
-      </View>
+      <ImageBackground
+        source={require("../assets/gggrain.png")}
+        resizeMode="stretch"
+        style={{ width: "100%", height: "100%", marginTop: 45 }}
+      >
+        <View style={styles.innerContainer}>
+          <Text style={styles.text}>{user.email}</Text>
+          <Button
+            buttonStyle={{ backgroundColor: "transparent" }}
+            title="Log out"
+            onPress={() => signOut(auth)}
+          />
+        </View>
+      </ImageBackground>
     </View>
   );
 }
@@ -26,8 +34,13 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     display: "flex",
-    backgroundColor: "white",
-    flex: 1,
-    marginTop: 45,
+    alignItems: "center",
+    height: "100%",
+  },
+  text: {
+    color: "#fadcb9",
+    fontWeight: "bold",
+    marginTop: 150,
+    marginBottom: 5,
   },
 });

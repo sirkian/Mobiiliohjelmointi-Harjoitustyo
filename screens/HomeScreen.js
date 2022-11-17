@@ -55,8 +55,8 @@ export default function HomeScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <ImageBackground
-        source={require("../assets/pexels-aditya-aiyar-1407305.jpg")}
-        resizeMode="cover"
+        source={require("../assets/gggrain.png")}
+        resizeMode="stretch"
         style={{ width: "100%", height: "100%", marginTop: 45 }}
       >
         <StatusBar style="light" />
@@ -65,43 +65,36 @@ export default function HomeScreen({ navigation }) {
             {plants.length > 0 ? (
               plants.map((plant) => (
                 <Tile
+                  featured
                   key={plant.key}
                   imageSrc={{ uri: plant.imageUrl }}
                   title={plant.plantName}
+                  titleStyle={styles.tileTitle}
                   caption={
                     <Progress.Bar
                       progress={plant.progress}
                       width={200}
-                      borderWidth={5}
-                      borderColor="rgba(255, 255, 255, 0.25)"
-                      unfilledColor="rgba(255, 255, 255, 0.4)"
+                      height={8}
+                      borderWidth={2}
+                      borderColor="rgba(0, 0, 0, 0.5)"
+                      unfilledColor="rgba(255, 255, 255, 0.7)"
                     />
                   }
-                  featured
                   containerStyle={{ marginBottom: 10 }}
                   imageProps={{
                     resizeMode: "cover",
-                    transition: "true",
+                    transition: true,
                     borderRadius: 5,
                   }}
                   width={tileWidth}
                   height={tileHeight}
                   onPress={() => navigate(plant)}
-                >
-                  <View
-                    style={{
-                      flex: 1,
-                      backgroundColor: "red",
-                      height: 200,
-                      width: 200,
-                    }}
-                  >
-                    <Text>test</Text>
-                  </View>
-                </Tile>
+                />
               ))
             ) : (
-              <Text>Nothing in here yet. Go ahead and add a plant.</Text>
+              <Text style={styles.text}>
+                Nothing in here yet. Go ahead and add a plant.
+              </Text>
             )}
           </View>
         </ScrollView>
@@ -121,5 +114,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 60,
     marginTop: 20,
+  },
+  tileTitle: {
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    paddingVertical: 1,
+    paddingHorizontal: 5,
+    borderRadius: 3,
+  },
+  text: {
+    color: "#fadcb9",
+    fontWeight: "bold",
+    marginTop: 150,
   },
 });

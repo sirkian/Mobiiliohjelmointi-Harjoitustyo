@@ -1,4 +1,10 @@
-import { StyleSheet, View, Alert, Dimensions } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Alert,
+  Dimensions,
+  ImageBackground,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import * as Progress from "react-native-progress";
 import { database } from "../utils/firebase";
@@ -50,7 +56,6 @@ export default function PlantScreen({ route, navigation }) {
       [
         {
           text: "cancel",
-          style: "cancel",
         },
         { text: "delete", onPress: () => handleDelete(plant) },
       ]
@@ -65,84 +70,93 @@ export default function PlantScreen({ route, navigation }) {
 
   return (
     <View style={styles.container}>
-      <Image source={{ uri: plant.imageUrl }} style={styles.image} />
-      <View style={styles.plantNameContainer}>
-        {editingName ? (
-          <Input
-            style={styles.plantNameInput}
-            containerStyle={{ width: 300 }}
-            value={plantName}
-            onChangeText={(text) => setPlantName(text)}
-            rightIcon={
+      <ImageBackground
+        source={require("../assets/gggrain.png")}
+        resizeMode="stretch"
+        style={{
+          display: "flex",
+          flex: 1,
+          alignItems: "center",
+        }}
+      >
+        <Image source={{ uri: plant.imageUrl }} style={styles.image} />
+        <View style={styles.plantNameContainer}>
+          {editingName ? (
+            <Input
+              style={styles.plantNameInput}
+              containerStyle={{ width: 300 }}
+              value={plantName}
+              onChangeText={(text) => setPlantName(text)}
+              rightIcon={
+                <Icon
+                  type="feather"
+                  name="save"
+                  containerStyle={{ marginLeft: 5, bottom: -3 }}
+                  size={20}
+                  color="white"
+                  onPress={updateName}
+                />
+              }
+            />
+          ) : (
+            <Text style={styles.plantName} onPress={handleEditName}>
+              {plant.plantName}
+              {"  "}
               <Icon
                 type="feather"
-                name="save"
-                containerStyle={{ marginLeft: 5, bottom: -3 }}
-                size={20}
-                color="white"
-                onPress={updateName}
+                name="edit"
+                size={18}
+                color="rgba(255, 255, 255, 0.65)"
               />
-            }
-          />
-        ) : (
-          <Text style={styles.plantName} onPress={handleEditName}>
-            {plant.plantName}
-            {"  "}
-            <Icon
-              type="feather"
-              name="edit"
-              size={18}
-              color="rgba(255, 255, 255, 0.65)"
+            </Text>
+          )}
+        </View>
+        <View style={styles.contentContainer}>
+          <View style={styles.textContainer}>
+            <Text style={styles.text}>
+              <Icon type="feather" name="map-pin" size={14} color="white" />{" "}
+              {plant.location}
+            </Text>
+            <Text style={styles.text}>
+              <Icon type="feather" name="droplet" size={14} color="white" />{" "}
+              {plant.waterInterval === 1 ? (
+                <Text style={styles.text}>Water every day</Text>
+              ) : (
+                <Text style={styles.text}>
+                  Water every {plant.waterInterval} days
+                </Text>
+              )}
+            </Text>
+            <Text style={styles.text}>
+              <Icon type="feather" name="clock" size={14} color="white" />{" "}
+              {timeLeft}
+            </Text>
+          </View>
+          <View style={styles.progressContainer}>
+            <Progress.Circle
+              size={Dimensions.get("window").width * 0.45}
+              progress={prog}
+              thickness={8}
+              strokeCap="round"
+              fill="transparent"
+              color="#4bd2db"
+              unfilledColor="#1b1c1c"
+              borderWidth={0}
+              showsText
             />
-          </Text>
-        )}
-      </View>
-      <View style={styles.contentContainer}>
-        <View style={styles.textContainer}>
-          <Text style={styles.text}>
-            <Icon
-              iconStyle={{}}
-              type="feather"
-              name="map-pin"
-              size={14}
-              color="black"
-            />{" "}
-            {plant.location}
-          </Text>
-          <Text style={styles.text}>
-            <Icon type="feather" name="droplet" size={14} color="black" />{" "}
-            {plant.waterInterval === 1 ? (
-              <Text style={styles.text}>Water every day</Text>
-            ) : (
-              <Text style={styles.text}>
-                Water every {plant.waterInterval} days
-              </Text>
-            )}
-          </Text>
-          <Text style={styles.text}>
-            <Icon type="feather" name="clock" size={14} color="black" />{" "}
-            {timeLeft}
-          </Text>
+            <Text onPress={() => handleReset(plant)} style={styles.reset}>
+              Reset
+            </Text>
+          </View>
         </View>
-        <View style={styles.progressContainer}>
-          <Progress.Circle
-            size={Dimensions.get("window").width * 0.45}
-            progress={prog}
-            thickness={8}
-            strokeCap="round"
-            fill="transparent"
-            color="#278c8c"
-            unfilledColor="lightgrey"
-            borderWidth={0}
-            showsText
-          />
-          <Text onPress={() => handleReset(plant)} style={styles.reset}>
-            Reset
-          </Text>
-        </View>
-      </View>
 
-      <Button title="Delete" onPress={() => showAlert(plant)} />
+        <Button
+          title="Delete"
+          buttonStyle={{ backgroundColor: "#1b1c1c" }}
+          titleStyle={{ color: "#fadcb9" }}
+          onPress={() => showAlert(plant)}
+        />
+      </ImageBackground>
     </View>
   );
 }
@@ -196,13 +210,15 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    bottom: -50,
   },
   text: {
     marginBottom: 5,
+    color: "#fadcb9",
   },
   reset: {
     position: "relative",
     bottom: 60,
-    color: "#278c8c",
+    color: "#fadcb9",
   },
 });

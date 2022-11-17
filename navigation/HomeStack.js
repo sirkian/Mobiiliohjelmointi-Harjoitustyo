@@ -16,18 +16,19 @@ function Root() {
     tabBarIcon: ({ focused, color, size }) => {
       let iconName;
       if (route.name === "Home") iconName = "md-leaf";
-      if (route.name === "Add") iconName = "md-add-circle-outline";
+      if (route.name === "Add") iconName = "md-add";
       if (route.name === "Profile") iconName = "md-person";
       return <Ionicons name={iconName} size={size} color={color} />;
     },
     tabBarStyle: {
       height: 60,
       position: "absolute",
-      backgroundColor: "rgba(255, 255, 255, 0.6)",
+      backgroundColor: "rgba(237, 211, 178, 0.8)",
     },
     tabBarActiveBackgroundColor: "#0b2613",
     tabBarActiveTintColor: "white",
     tabBarInactiveTintColor: "#0b2613",
+    tabBarShowLabel: false,
     tabBarLabelStyle: { marginBottom: 3 },
     tabBarItemStyle: {
       height: 50,
@@ -50,7 +51,7 @@ export default function HomeStack() {
   const options = ({ route }) => ({
     title: route.params.plant.plantName,
     headerStyle: {
-      backgroundColor: "#0b2613",
+      backgroundColor: "#141414",
     },
     headerTintColor: "white",
     headerTitleStyle: {
