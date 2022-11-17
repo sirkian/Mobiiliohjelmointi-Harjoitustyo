@@ -153,6 +153,7 @@ export default function PlantScreen({ route, navigation }) {
         <Button
           title="Delete"
           buttonStyle={{ backgroundColor: "#1b1c1c" }}
+          containerStyle={styles.deleteBtn}
           titleStyle={{ color: "#fadcb9" }}
           onPress={() => showAlert(plant)}
         />
@@ -171,8 +172,6 @@ const styles = StyleSheet.create({
   image: {
     height: Dimensions.get("window").height * 0.45,
     width: Dimensions.get("window").width,
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
   },
   plantNameContainer: {
     backgroundColor: "rgba(0,0,0,0.55)",
@@ -193,24 +192,25 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     width: Dimensions.get("window").width,
+    height: Dimensions.get("window").height * 0.55,
     display: "flex",
     flexDirection: "row",
-    marginTop: 15,
     marginBottom: 70,
     paddingHorizontal: 15,
     justifyContent: "space-between",
+    backgroundColor: "rgba(0, 0, 0, 0.4)",
   },
   textContainer: {
     display: "flex",
     flex: 1,
-    paddingTop: 10,
+    paddingTop: 20,
   },
   progressContainer: {
     display: "flex",
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    bottom: -50,
+    paddingBottom: 50,
   },
   text: {
     marginBottom: 5,
@@ -220,5 +220,9 @@ const styles = StyleSheet.create({
     position: "relative",
     bottom: 60,
     color: "#fadcb9",
+  },
+  deleteBtn: {
+    position: "relative",
+    bottom: 180,
   },
 });

@@ -25,6 +25,22 @@ export default function UploadComponent(props) {
     }
   };
 
+  const openCamera = async () => {
+    const permission = await ImagePicker.requestCameraPermissionsAsync();
+    if (!permission.granted) {
+      Alert.alert("Permission needed to open camera!");
+      return;
+    }
+    const result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+    if (!result.cancelled) {
+      setImage(result);
+    }
+  };
+
   const handleUpload = async () => {
     setUploading(true);
     try {
@@ -89,18 +105,26 @@ export default function UploadComponent(props) {
           {image !== null ? (
             <Image style={styles.image} source={{ uri: image.uri }} />
           ) : (
-            <Button
-              onPress={pickImage}
-              title="PICK IMAGE"
-              buttonStyle={styles.button}
-              titleStyle={styles.buttonTitle}
-            />
+            <>
+              <Button
+                onPress={pickImage}
+                title="PICK IMAGE"
+                buttonStyle={styles.button}
+                titleStyle={styles.buttonTitle}
+              />
+              <Button
+                onPress={openCamera}
+                title="OPEN CAMERA"
+                buttonStyle={styles.button}
+                titleStyle={styles.buttonTitle}
+              />
+            </>
           )}
           {!uploading && image !== null && (
             <View style={styles.iconView}>
               <Icon
                 reverse
-                color="green"
+                color="rgba(54, 156, 81, 0.8)"
                 type="feather"
                 name="check"
                 onPress={handleUpload}
@@ -108,7 +132,7 @@ export default function UploadComponent(props) {
               />
               <Icon
                 reverse
-                color="red"
+                color="rgba(0, 0, 0, 0.6)"
                 type="feather"
                 name="x"
                 onPress={() => setImage(null)}
@@ -123,7 +147,6 @@ export default function UploadComponent(props) {
 }
 
 const iconSize = 28;
-const semiTransparent = "rgba(255, 255, 255, 0.65)";
 const darkGreen = "#0b2613";
 const styles = StyleSheet.create({
   container: {
@@ -158,7 +181,7 @@ const styles = StyleSheet.create({
   button: {
     paddingHorizontal: 25,
     paddingVertical: 10,
-    backgroundColor: semiTransparent,
+    backgroundColor: "rgba(255, 255, 255, 0.65)",
     marginTop: 10,
   },
   buttonTitle: {

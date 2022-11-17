@@ -109,11 +109,12 @@ const styles = StyleSheet.create({
     marginBottom: 90,
   },
   scrollContainer: {
+    backgroundColor: "rgba(0, 0, 0, 0.4)",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 60,
-    marginTop: 20,
+    paddingBottom: 60,
+    paddingTop: 20,
   },
   tileTitle: {
     backgroundColor: "rgba(0, 0, 0, 0.5)",
