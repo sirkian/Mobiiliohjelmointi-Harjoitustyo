@@ -8,7 +8,7 @@ import {
 import React, { useEffect, useState } from "react";
 import * as Progress from "react-native-progress";
 import { database } from "../utils/firebase";
-import { ref, remove, update, onValue } from "firebase/database";
+import { ref, remove, update } from "firebase/database";
 import { Button, Text, Image, Icon, Input } from "react-native-elements";
 import { getAuth } from "firebase/auth";
 import { setTimer, formatTime, deleteImageFromStorage } from "../utils/utils";
@@ -16,15 +16,19 @@ import { setTimer, formatTime, deleteImageFromStorage } from "../utils/utils";
 export default function PlantScreen({ route, navigation }) {
   const [prog, setProg] = useState(0);
   const [plantName, setPlantName] = useState("");
+  const [timeLeft, setTimeLeft] = useState("");
   const [editingName, setEditingName] = useState(false);
   const { plant } = route.params;
   const user = getAuth().currentUser;
-  const [timeLeft, setTimeLeft] = useState("");
 
   useEffect(() => {
+    handleProgress();
+  }, [handleProgress]);
+
+  const handleProgress = () => {
     setProg(plant.progress);
     setTimeLeft(formatTime(plant.timeAfterInterval));
-  }, []);
+  };
 
   const handleEditName = () => {
     setPlantName(plant.plantName);
@@ -54,9 +58,7 @@ export default function PlantScreen({ route, navigation }) {
       "Delete plant?",
       `Plant ${plant.plantName} will be deleted permanently.`,
       [
-        {
-          text: "cancel",
-        },
+        { text: "cancel" },
         { text: "delete", onPress: () => handleDelete(plant) },
       ]
     );

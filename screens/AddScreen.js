@@ -29,7 +29,15 @@ export default function AddScreen({ navigation }) {
 
   const handleSave = () => {
     const timeAfterInterval = setTimer(waterInterval);
-    if (plantName.length > 0 && imageUrl.length > 0) {
+    if (plantName.length === 0) {
+      Alert.alert("Please add a name for the plant");
+      return;
+    }
+    if (imageUrl.length === 0) {
+      Alert.alert("Add an image first!");
+      return;
+    }
+    try {
       push(ref(database, `plants/${user.uid}/`), {
         plantName,
         location,
@@ -42,6 +50,8 @@ export default function AddScreen({ navigation }) {
       Alert.alert(null, `${plantName} added!`, [
         { text: "ok", onPress: () => navigation.navigate("Home") },
       ]);
+    } catch (err) {
+      console.log(err);
     }
   };
 

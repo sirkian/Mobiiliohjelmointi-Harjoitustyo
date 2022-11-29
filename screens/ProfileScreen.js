@@ -1,4 +1,4 @@
-import { Alert, StyleSheet, View, ImageBackground } from "react-native";
+import { StyleSheet, View, ImageBackground } from "react-native";
 import React from "react";
 import { getAuth, signOut } from "firebase/auth";
 import { Button, Text } from "react-native-elements";
@@ -36,6 +36,7 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     height: "100%",
+    backgroundColor: "rgba(0, 0, 0, 0.4)",
   },
   text: {
     color: "#fadcb9",

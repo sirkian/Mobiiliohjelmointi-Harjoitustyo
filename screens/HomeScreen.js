@@ -22,7 +22,7 @@ export default function HomeScreen({ navigation }) {
 
   useEffect(() => {
     fetchPlants();
-  }, []);
+  }, [fetchPlants]);
 
   const fetchPlants = () => {
     const plantsRef = ref(database, `plants/${user.uid}/`);
@@ -33,17 +33,24 @@ export default function HomeScreen({ navigation }) {
         : [];
       setPlants(plants);
     });
-    handleUpdate();
   };
 
+  useEffect(() => {
+    if (plants.length !== 0) {
+      handleUpdate();
+    }
+  }, [plants.length]);
+
   const handleUpdate = () => {
-    if (plants.length > 0) {
+    try {
       plants.forEach((plant) => {
         const timeDiff = getTimeDiff(plant.timeAfterInterval);
         let progress = getProgress(timeDiff, plant.waterInterval);
         if (progress < 0.1) progress = 0;
         update(ref(database, `plants/${user.uid}/${plant.key}`), { progress });
       });
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -92,9 +99,11 @@ export default function HomeScreen({ navigation }) {
                 />
               ))
             ) : (
-              <Text style={styles.text}>
-                Nothing in here yet. Go ahead and add a plant.
-              </Text>
+              <View style={{ height: Dimensions.get("window").height }}>
+                <Text style={styles.text}>
+                  Nothing in here yet. Go ahead and add a plant.
+                </Text>
+              </View>
             )}
           </View>
         </ScrollView>
@@ -111,10 +120,10 @@ const styles = StyleSheet.create({
   scrollContainer: {
     backgroundColor: "rgba(0, 0, 0, 0.4)",
     display: "flex",
-    justifyContent: "center",
     alignItems: "center",
     paddingBottom: 60,
     paddingTop: 20,
+    minHeight: Dimensions.get("window").height,
   },
   tileTitle: {
     backgroundColor: "rgba(0, 0, 0, 0.5)",
