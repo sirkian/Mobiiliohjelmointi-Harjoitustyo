@@ -3,12 +3,16 @@
 ###### React Navigation
 
 `npm install @react-navigation/native`
+
 `npm install @react-navigation/bottom-tabs`
+
 `npm install @react-navigation/native-stack`
+
 
 ###### React Native Elements
 
 `npm install react-native-elements`
+
 
 ###### React Native Progress
 
@@ -17,17 +21,20 @@
 `npm install react-native-progress --save`
 `expo install react-native-svg`
 
+
 ###### Firebase
 
 Project uses Authentication, Realtime Database and Storage from Firebase.
 
 `expo install firebase@9.6.11`
 
+
 ###### Expo ImagePicker
 
 [Expo ImagePicker](https://docs.expo.dev/versions/latest/sdk/imagepicker/) is used to get images from camera roll, or straight from the camera.
 
 `npx expo install expo-image-picker`
+
 
 ###### Background images
 
